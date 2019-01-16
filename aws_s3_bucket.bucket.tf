@@ -6,8 +6,8 @@ resource "aws_s3_bucket" "bucket" {
 
   server_side_encryption_configuration {
     rule {
-      count = 1
       apply_server_side_encryption_by_default {
+        count = "1"
         sse_algorithm = "AES256"
       }
     }
