@@ -13,3 +13,11 @@ variable "s3_bucket_policy" {}
 locals {
   environment = "${substr(var.common_tags["Environment"],0,1)}"
 }
+
+variable "bucket_versioning" {
+  default = false
+}
+
+variable "s3_sse_algorithm" {
+  default = "AES256"
+}
