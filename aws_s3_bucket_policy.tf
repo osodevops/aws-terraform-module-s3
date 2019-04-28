@@ -3,7 +3,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   policy = <<POLICY
 {
   "Version": "2012-10-17",
-  "Statememt": [
+  "Statement": [
     {
       "Effect": "Deny",
       "Principal": "*",
