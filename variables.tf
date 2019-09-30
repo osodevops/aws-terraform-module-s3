@@ -53,3 +53,19 @@ variable "delete_expired_objects" {
 variable "current_version_expiration_days" {
   default = 90
 }
+
+variable "block_public_acls" {
+  default = false
+}
+
+variable "block_public_policy" {
+  default = false
+}
+
+variable "ignore_public_acls" {
+  default = false
+}
+
+variable "restrict_public_buckets" {
+  default = false
+}
