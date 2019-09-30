@@ -56,8 +56,6 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 resource "aws_s3_account_public_access_block" "bucket_access" {
-  bucket = "${aws_s3_bucket.bucket.id}"
-
   block_public_acls       = "${var.block_public_acls}"
   block_public_policy     = "${var.block_public_policy}"
   ignore_public_acls      = "${var.ignore_public_acls}"
