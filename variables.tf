@@ -20,10 +20,6 @@ variable "s3_bucket_policy" {
   description = "You can provide a custom bucket policy with this variable"
 }
 
-locals {
-  environment = "${substr(var.common_tags["Environment"],0,1)}"
-}
-
 variable "bucket_versioning" {
   description = "Set if the bucket objects should be versioned or not"
   default = false
