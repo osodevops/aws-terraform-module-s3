@@ -9,7 +9,3 @@ variable "s3_bucket_acl" {
 variable "s3_bucket_force_destroy" {}
 variable "s3_bucket_name" {}
 variable "s3_bucket_policy" {}
-
-locals {
-  environment = "${substr(var.common_tags["Environment"],0,1)}"
-}

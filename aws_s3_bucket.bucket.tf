@@ -12,7 +12,5 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 
-  tags = "${merge(var.common_tags,
-    map("Name", "${local.environment}-${var.s3_bucket_name}-S3")
-    )}"
+  tags = "${var.common_tags}"
 }
