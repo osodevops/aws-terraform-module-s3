@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 
-  tags = var.common_tags
+  tags = merge(var.common_tags)
 
   #lifecycle rules for non-current versions (defaults to on)
   lifecycle_rule {
