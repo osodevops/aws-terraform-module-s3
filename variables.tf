@@ -37,7 +37,7 @@ variable "mfa_delete_enabled" {
 
 variable "enable_lifecycle" {
   description = "Enable the object lifecycle and store older items in Glacier"
-  default = true
+  default = false
 }
 
 variable "current_ia_transition_days" {
