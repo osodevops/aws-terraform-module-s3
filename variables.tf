@@ -1,6 +1,6 @@
 variable "common_tags" {
   description = "Set the common tags that will be populated to all AWS resources"
-  type = "map"
+  type = map(string)
 }
 
 variable "s3_bucket_acl" {
