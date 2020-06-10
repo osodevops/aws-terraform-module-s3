@@ -1,16 +1,16 @@
 variable "common_tags" {
   description = "Set the common tags that will be populated to all AWS resources"
-  type        = map(string)
+  type = map(string)
 }
 
 variable "s3_bucket_acl" {
   description = "Set the bucket access control list"
-  default     = "private"
+  default = "private"
 }
 
 variable "s3_bucket_force_destroy" {
   description = "Allow the bucket to be destroyed after creation"
-  default     = false
+  default = false
 }
 
 variable "s3_bucket_name" {
@@ -38,7 +38,7 @@ variable "mfa_delete_enabled" {
 
 variable "enable_lifecycle" {
   description = "Enable the object lifecycle and store older items in Glacier"
-  default     = true
+  default = false
 }
 
 variable "current_ia_transition_days" {
@@ -80,4 +80,3 @@ variable "ignore_public_acls" {
 variable "restrict_public_buckets" {
   default = false
 }
-
