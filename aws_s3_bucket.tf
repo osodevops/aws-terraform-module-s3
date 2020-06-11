@@ -4,9 +4,13 @@ resource "aws_s3_bucket" "bucket" {
   acl           = var.s3_bucket_acl
   force_destroy = var.s3_bucket_force_destroy
 
-  versioning {
-    enabled    = var.bucket_versioning
-    mfa_delete = var.mfa_delete_enabled
+  dynamic "versioning" {
+    for_each = length(keys(var.versioning)) == 0 ? [] : [var.versioning]
+
+    content {
+      enabled    = lookup(versioning.value, "enabled", null)
+      mfa_delete = lookup(versioning.value, "mfa_delete", null)
+    }
   }
 
   server_side_encryption_configuration {
@@ -19,36 +23,56 @@ resource "aws_s3_bucket" "bucket" {
 
   tags = merge(var.common_tags)
 
-  #lifecycle rules for non-current versions (defaults to on)
-  lifecycle_rule {
-    enabled = var.enable_lifecycle
-    id      = "default"
+  dynamic "lifecycle_rule" {
+    for_each = var.lifecycle_rule
 
-    abort_incomplete_multipart_upload_days = 14
+    content {
+      id                                     = lookup(lifecycle_rule.value, "id", null)
+      prefix                                 = lookup(lifecycle_rule.value, "prefix", null)
+      tags                                   = lookup(lifecycle_rule.value, "tags", null)
+      abort_incomplete_multipart_upload_days = lookup(lifecycle_rule.value, "abort_incomplete_multipart_upload_days", null)
+      enabled                                = lifecycle_rule.value.enabled
 
-    transition {
-      days          = var.current_ia_transition_days
-      storage_class = "STANDARD_IA"
-    }
+      # Max 1 block - expiration
+      dynamic "expiration" {
+        for_each = length(keys(lookup(lifecycle_rule.value, "expiration", {}))) == 0 ? [] : [lookup(lifecycle_rule.value, "expiration", {})]
 
-    transition {
-      days          = var.current_glacier_transition_days
-      storage_class = "GLACIER"
-    }
+        content {
+          date                         = lookup(expiration.value, "date", null)
+          days                         = lookup(expiration.value, "days", null)
+          expired_object_delete_marker = lookup(expiration.value, "expired_object_delete_marker", null)
+        }
+      }
 
-    noncurrent_version_transition {
-      days          = var.noncurrent_ia_transition_days
-      storage_class = "STANDARD_IA"
-    }
+      # Several blocks - transition
+      dynamic "transition" {
+        for_each = lookup(lifecycle_rule.value, "transition", [])
 
-    noncurrent_version_transition {
-      days          = var.noncurrent_glacier_transition_days
-      storage_class = "GLACIER"
-    }
+        content {
+          date          = lookup(transition.value, "date", null)
+          days          = lookup(transition.value, "days", null)
+          storage_class = transition.value.storage_class
+        }
+      }
 
-    expiration {
-      expired_object_delete_marker = var.delete_expired_objects
-      days                         = var.current_version_expiration_days
+      # Max 1 block - noncurrent_version_expiration
+      dynamic "noncurrent_version_expiration" {
+        for_each = length(keys(lookup(lifecycle_rule.value, "noncurrent_version_expiration", {}))) == 0 ? [] : [lookup(lifecycle_rule.value, "noncurrent_version_expiration", {})]
+
+        content {
+          days = lookup(noncurrent_version_expiration.value, "days", null)
+        }
+      }
+
+      # Several blocks - noncurrent_version_transition
+      dynamic "noncurrent_version_transition" {
+        for_each = lookup(lifecycle_rule.value, "noncurrent_version_transition", [])
+
+        content {
+          days          = lookup(noncurrent_version_transition.value, "days", null)
+          storage_class = noncurrent_version_transition.value.storage_class
+        }
+      }
     }
   }
 }

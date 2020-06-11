@@ -41,22 +41,6 @@ variable "enable_lifecycle" {
   default = false
 }
 
-variable "current_ia_transition_days" {
-  default = 30
-}
-
-variable "current_glacier_transition_days" {
-  default = 60
-}
-
-variable "noncurrent_ia_transition_days" {
-  default = 30
-}
-
-variable "noncurrent_glacier_transition_days" {
-  default = 60
-}
-
 variable "delete_expired_objects" {
   default = false
 }
@@ -79,4 +63,16 @@ variable "ignore_public_acls" {
 
 variable "restrict_public_buckets" {
   default = false
+}
+
+variable "lifecycle_rule" {
+  description = "List of maps containing configuration of object lifecycle management."
+  type        = any
+  default     = []
+}
+
+variable "versioning" {
+  description = "Map containing versioning configuration."
+  type        = map(string)
+  default     = {}
 }
