@@ -71,6 +71,11 @@ variable "lifecycle_rule" {
   default     = []
 }
 
+variable "cors_rule" {
+  description = "cors rule"
+  default     = []
+}
+
 variable "versioning" {
   description = "Map containing versioning configuration."
   type        = map(string)
