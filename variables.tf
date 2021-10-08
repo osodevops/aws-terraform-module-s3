@@ -67,6 +67,7 @@ variable "restrict_public_buckets" {
 
 variable "allowed_headers" {
   default = []
+  type = list
 }
 
 variable "allowed_methods" {
@@ -85,8 +86,8 @@ variable "expose_headers" {
 }
 
 variable "max_age_seconds" {
-  default = []
-  type = list
+  default = null
+  type = number
 }
 
 variable "lifecycle_rule" {
@@ -103,6 +104,6 @@ variable "versioning" {
 
 variable "cors_rule" {
   description = "Map containing CORS configuration."
-  type = map(string)
+  type = any
   default = {}
 }
