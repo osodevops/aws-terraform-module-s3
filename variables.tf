@@ -76,3 +76,9 @@ variable "versioning" {
   type        = map(string)
   default     = {}
 }
+
+variable "cors_rule" {
+  description = "Map containing CORS configuration."
+  type = map(string)
+  default = {}
+}
