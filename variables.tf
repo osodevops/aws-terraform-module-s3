@@ -70,10 +70,12 @@ variable "allowed_headers" {
 }
 
 variable "allowed_methods" {
+  default = []
   type = list
 }
 
 variable "allowed_origins" {
+  default = []
   type = list
 }
 
