@@ -80,8 +80,8 @@ resource "aws_s3_bucket" "bucket" {
     for_each = length(keys(var.cors_rule)) == 0 ? [] : [var.cors_rule]
     content {
       allowed_headers = [lookup(cors_rule.value, "allowed_headers", [])]
-      allowed_methods = [lookup(cors_rule.value, "allowed_methods", [])]
-      allowed_origins = [lookup(cors_rule.value, "allowed_origins", [])]
+      allowed_methods = var.allowed_methods
+      allowed_origins = var.allowed_origins
       expose_headers = [lookup(cors_rule.value, "expose_headers", [])]
       max_age_seconds = [lookup(cors_rule.value, "max_age_seconds", [])]
     }

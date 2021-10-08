@@ -69,16 +69,22 @@ variable "allowed_headers" {
   default = []
 }
 
-variable "allowed_methods" {}
+variable "allowed_methods" {
+  type = list
+}
 
-variable "allowed_origins" {}
+variable "allowed_origins" {
+  type = list
+}
 
 variable "expose_headers" {
   default = []
+  type = list
 }
 
 variable "max_age_seconds" {
   default = []
+  type = list
 }
 
 variable "lifecycle_rule" {
@@ -95,6 +101,6 @@ variable "versioning" {
 
 variable "cors_rule" {
   description = "Map containing CORS configuration."
-  type = map(list(string))
+  type = map(string)
   default = {}
 }
