@@ -77,7 +77,7 @@ resource "aws_s3_bucket" "bucket" {
   }
 
   dynamic "cors_rule" {
-    for_each = length(keys(var.cors_rule)) == 0 ? [] : [var.cors_rule]
+    for_each = var.cors_rule
     content {
       allowed_headers = lookup(cors_rule.value, "allowed_headers", [])
       allowed_methods = lookup(cors_rule.value, "allowed_methods", [])
