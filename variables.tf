@@ -65,6 +65,22 @@ variable "restrict_public_buckets" {
   default = false
 }
 
+variable "allowed_headers" {
+  default = []
+}
+
+variable "allowed_methods" {}
+
+variable "allowed_origins" {}
+
+variable "expose_headers" {
+  default = []
+}
+
+variable "max_age_seconds" {
+  default = []
+}
+
 variable "lifecycle_rule" {
   description = "List of maps containing configuration of object lifecycle management."
   type        = any
@@ -79,6 +95,6 @@ variable "versioning" {
 
 variable "cors_rule" {
   description = "Map containing CORS configuration."
-  type = map(string)
+  type = map(list(string))
   default = {}
 }
