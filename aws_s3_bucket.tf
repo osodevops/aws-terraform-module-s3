@@ -75,6 +75,18 @@ resource "aws_s3_bucket" "bucket" {
       }
     }
   }
+
+  dynamic "cors_rule" {
+    for_each = var.cors_rule
+    content {
+      allowed_headers = lookup(cors_rule.value, "allowed_headers", [])
+      allowed_methods = lookup(cors_rule.value, "allowed_methods", [])
+      allowed_origins = lookup(cors_rule.value, "allowed_origins", [])
+      expose_headers = lookup(cors_rule.value, "expose_headers", null)
+      max_age_seconds = lookup(cors_rule.value, "max_age_seconds", null)
+    }
+  }
+
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket_access" {
