@@ -103,7 +103,7 @@ variable "versioning" {
 }
 
 variable "cors_rule" {
-  description = "Map containing CORS configuration."
+  description = "List of maps containing CORS configuration."
   type = any
   default = {}
 }
