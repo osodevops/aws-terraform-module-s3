@@ -118,7 +118,6 @@ variable "target_prefix" {
   description = "To specify a key prefix for log objects."
   type = string
   default = "logs/"
-
 }
 
 variable "logging" {
