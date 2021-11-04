@@ -92,7 +92,6 @@ resource "aws_s3_bucket" "bucket" {
     content {
       target_bucket = logging.value["target_bucket"]
       target_prefix = lookup(logging.value, "target_prefix", var.target_prefix)
-
     }
   }
 
