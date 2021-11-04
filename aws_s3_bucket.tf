@@ -87,6 +87,11 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 
+  logging {
+    target_bucket = var.target_bucket
+    target_prefix = var.target_prefix
+  }
+
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket_access" {
