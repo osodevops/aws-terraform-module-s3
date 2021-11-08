@@ -107,3 +107,19 @@ variable "cors_rule" {
   type = any
   default = {}
 }
+
+variable "target_bucket" {
+  description = "The name of the bucket that will receive the log objects."
+  type = string
+  default = null
+}
+
+variable "target_prefix" {
+  description = "To specify a key prefix for log objects."
+  type = string
+  default = "logs/"
+}
+
+variable "logging" {
+  default = {}
+}

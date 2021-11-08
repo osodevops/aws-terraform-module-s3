@@ -87,6 +87,14 @@ resource "aws_s3_bucket" "bucket" {
     }
   }
 
+  dynamic "logging" {
+    for_each = length(keys(var.logging)) == 0 ? [] : [var.logging]
+    content {
+      target_bucket = logging.value["target_bucket"]
+      target_prefix = lookup(logging.value, "target_prefix", var.target_prefix)
+    }
+  }
+
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket_access" {
