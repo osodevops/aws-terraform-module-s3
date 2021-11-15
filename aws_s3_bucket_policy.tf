@@ -1,4 +1,5 @@
 resource "aws_s3_bucket_policy" "bucket_policy" {
+  count      = var.s3_bucket_policy == "" ? 1 : 0
   depends_on = [aws_s3_bucket_public_access_block.bucket_access]
   bucket     = aws_s3_bucket.bucket.id
   policy     = <<POLICY
