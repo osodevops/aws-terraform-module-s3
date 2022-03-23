@@ -36,14 +36,6 @@ variable "mfa_delete_enabled" {
   default     = false
 }
 
-variable "delete_expired_objects" {
-  default = false
-}
-
-variable "current_version_expiration_days" {
-  default = 90
-}
-
 variable "block_public_acls" {
   default = false
 }
