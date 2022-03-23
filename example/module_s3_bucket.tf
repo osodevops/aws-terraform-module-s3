@@ -13,8 +13,8 @@ module "detected_public_account_bucket" {
   ignore_public_acls      = true
 
   versioning = {
-    status = true
-    mfa_delete = false
+    status = "Enabled"
+    mfa_delete = "Disabled"
   }
 
   cors_rule = {
