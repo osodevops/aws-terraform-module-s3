@@ -1,83 +1,60 @@
 resource "aws_s3_bucket" "bucket" {
   bucket        = var.s3_bucket_name
-  policy        = var.s3_bucket_policy
-  acl           = var.s3_bucket_acl
   force_destroy = var.s3_bucket_force_destroy
 
-  dynamic "versioning" {
-    for_each = length(keys(var.versioning)) == 0 ? [] : [var.versioning]
+  tags = merge(var.common_tags)
 
-    content {
-      enabled    = lookup(versioning.value, "enabled", null)
-      mfa_delete = lookup(versioning.value, "mfa_delete", null)
-    }
+}
+
+resource "aws_s3_bucket_acl" "bucket-acl" {
+    bucket = aws_s3_bucket.bucket.id   
+    acl    = var.s3_bucket_acl
+}
+
+resource "aws_s3_bucket_intelligent_tiering_configuration" "bucket-configuration" {
+  count  = var.intelligent_tiering_configuration_enabled ? 1 : 0
+  bucket = one(aws_s3_bucket.bucket[*].bucket)
+  name   = var.intelligent_tiering_configuration_name 
+
+  tiering {
+    access_tier = "DEEP_ARCHIVE_ACCESS"
+    days        = var.deep_archive_access_days
   }
+  tiering {
+    access_tier = "ARCHIVE_ACCESS"
+    days        = var.archieve_access_days
+  }
+}
 
-  server_side_encryption_configuration {
+
+resource "aws_s3_bucket_cors_configuration" "bucket" {
+    bucket   = aws_s3_bucket.bucket.id    
+
+    cors_rule {
+      allowed_headers = lookup(var.cors_rule, "allowed_headers", null)
+      allowed_methods = lookup(var.cors_rule, "allowed_methods", null)
+      allowed_origins = lookup(var.cors_rule, "allowed_origins", null)
+      expose_headers  = lookup(var.cors_rule, "expose_headers", null)
+      max_age_seconds = lookup(var.cors_rule, "max_age_seconds", null)
+    }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encrpytion" {
+    bucket = aws_s3_bucket.bucket.id    
     rule {
       apply_server_side_encryption_by_default {
         sse_algorithm = var.s3_sse_algorithm
       }
     }
+}
+
+resource "aws_s3_bucket_versioning" "bucket-versioning" {
+  bucket = one(aws_s3_bucket.bucket[*].bucket)
+
+  versioning_configuration {
+    status     = lookup(var.versioning, "status", null)
+    mfa_delete = lookup(var.versioning, "mfa_delete", null)
   }
-
-  tags = merge(var.common_tags)
-
-  dynamic "lifecycle_rule" {
-    for_each = var.lifecycle_rule
-    content {
-      abort_incomplete_multipart_upload_days = lookup(lifecycle_rule.value, "abort_incomplete_multipart_upload_days", null)
-      enabled                                = lifecycle_rule.value.enabled
-      id                                     = lookup(lifecycle_rule.value, "id", null)
-      prefix                                 = lookup(lifecycle_rule.value, "prefix", null)
-      tags                                   = lookup(lifecycle_rule.value, "tags", null)
-
-      dynamic "expiration" {
-        for_each = lookup(lifecycle_rule.value, "expiration", [])
-        content {
-          date                         = lookup(expiration.value, "date", null)
-          days                         = lookup(expiration.value, "days", null)
-          expired_object_delete_marker = lookup(expiration.value, "expired_object_delete_marker", null)
-        }
-      }
-
-      dynamic "noncurrent_version_expiration" {
-        for_each = lookup(lifecycle_rule.value, "noncurrent_version_expiration", [])
-        content {
-          days = lookup(noncurrent_version_expiration.value, "days", null)
-        }
-      }
-
-      dynamic "noncurrent_version_transition" {
-        for_each = lookup(lifecycle_rule.value, "noncurrent_version_transition", [])
-        content {
-          days          = lookup(noncurrent_version_transition.value, "days", null)
-          storage_class = noncurrent_version_transition.value.storage_class
-        }
-      }
-
-      dynamic "transition" {
-        for_each = lookup(lifecycle_rule.value, "transition", [])
-        content {
-          date          = lookup(transition.value, "date", null)
-          days          = lookup(transition.value, "days", null)
-          storage_class = transition.value.storage_class
-        }
-      }
-    }
-  }
-
-  dynamic "cors_rule" {
-    for_each = var.cors_rule
-    content {
-      allowed_headers = lookup(cors_rule.value, "allowed_headers", null)
-      allowed_methods = cors_rule.value.allowed_methods
-      allowed_origins = cors_rule.value.allowed_origins
-      expose_headers  = lookup(cors_rule.value, "expose_headers", null)
-      max_age_seconds = lookup(cors_rule.value, "max_age_seconds", null)
-    }
-  }
-
 }
 
 resource "aws_s3_bucket_public_access_block" "bucket_access" {
@@ -89,3 +66,39 @@ resource "aws_s3_bucket_public_access_block" "bucket_access" {
   restrict_public_buckets = var.restrict_public_buckets
 }
 
+resource "aws_s3_bucket_policy" "bucket-policy" {
+  bucket = aws_s3_bucket.bucket.bucket
+  policy = one(data.aws_iam_policy_document.bucket-tls-policy-document[*].json)
+}
+
+data "aws_iam_policy_document" "bucket-tls-policy-document" {
+  count = var.tls_enabled ? 1 : 0
+
+  statement {
+    sid = "TLSEnabled"
+
+    effect = "Deny"
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    condition {
+      test = "Bool"
+      variable = "aws:SecureTransport"
+      values = ["false"]
+    }
+
+    condition {
+      test = "NumericLessThan"
+      variable = "s3:TlsVersion"
+      values = [1.2]
+    }
+
+    actions = ["*"]
+
+    resources = [
+      "${one(aws_s3_bucket.bucket[*].arn)}/*",
+      one(aws_s3_bucket.bucket[*].arn),
+    ]
+  }
+}

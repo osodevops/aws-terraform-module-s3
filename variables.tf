@@ -5,7 +5,7 @@ variable "common_tags" {
 
 variable "s3_bucket_acl" {
   description = "Set the bucket access control list"
-  default = "private"
+  default     = "private"
 }
 
 variable "s3_bucket_force_destroy" {
@@ -19,6 +19,7 @@ variable "s3_bucket_name" {
 
 variable "s3_bucket_policy" {
   description = "You can provide a custom bucket policy with this variable"
+  default     = ""
 }
 
 variable "bucket_versioning" {
@@ -34,19 +35,6 @@ variable "s3_sse_algorithm" {
 variable "mfa_delete_enabled" {
   description = "Require MFA to delete objects"
   default     = false
-}
-
-variable "enable_lifecycle" {
-  description = "Enable the object lifecycle and store older items in Glacier"
-  default = false
-}
-
-variable "delete_expired_objects" {
-  default = false
-}
-
-variable "current_version_expiration_days" {
-  default = 90
 }
 
 variable "block_public_acls" {
@@ -65,12 +53,6 @@ variable "restrict_public_buckets" {
   default = false
 }
 
-variable "lifecycle_rule" {
-  description = "List of maps containing configuration of object lifecycle management."
-  type        = any
-  default     = []
-}
-
 variable "cors_rule" {
   description = "cors rule"
   default     = []
@@ -80,4 +62,34 @@ variable "versioning" {
   description = "Map containing versioning configuration."
   type        = map(string)
   default     = {}
+}
+
+
+variable "intelligent_tiering_configuration_name" {
+  description = "The name to give to the tiering configuration"
+  type        = string
+  default     = "bucket_tiering"
+}
+variable "intelligent_tiering_configuration_enabled" {
+  description = "If intelligent tiering should be enabled or not"
+  type        = bool
+  default     = false
+}
+
+variable "deep_archive_access_days" {
+  description = "The amount of days to pass before objects go into deep archive."
+  type        = number
+  default     = 180
+}
+
+variable "archieve_access_days" {
+  description  = "The number of achieve days."
+  type         = number
+  default      = 125
+}
+
+variable "tls_enabled" {
+  description  = "If TLS on the bucket should be enabled."
+  type         = bool
+  default      = true
 }
