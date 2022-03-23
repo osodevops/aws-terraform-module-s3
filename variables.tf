@@ -5,7 +5,7 @@ variable "common_tags" {
 
 variable "s3_bucket_acl" {
   description = "Set the bucket access control list"
-  default = "private"
+  default     = "private"
 }
 
 variable "s3_bucket_force_destroy" {
@@ -64,23 +64,32 @@ variable "versioning" {
   default     = {}
 }
 
-variable "intelligent_tiering_configuration_enabled {
-  description = "If intelligent tiering should be enabled or not."
+variable "versioning" {
+  description = "Map containing versioning configuration."
+  type        = map(string)
+  default     = {}
+}
+
+variable "intelligent_tiering_configuration_enabled" {
+  description = "If intelligent tiering should be enabled or not"
   type        = bool
   default     = false
 }
 
 variable "deep_archive_access_days" {
-  type    = number
-  default = 180
+  description = "The amount of days to pass before objects go into deep archive."
+  type        = number
+  default     = 180
 }
 
 variable "archieve_access_days" {
-  type    = number
-  default = 125
+  description  = "The number of achieve days."
+  type         = number
+  default      = 125
 }
 
 variable "tls_enabled" {
-  type    = bool
-  default = true
+  description  = "If TLS on the bucket should be enabled."
+  type         = bool
+  default      = true
 }
