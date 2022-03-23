@@ -1,6 +1,6 @@
 module "bucket" {
   source                  = "../"
-  s3_bucket_name          = "exaple_bucket_name"
+  s3_bucket_name          = "example_bucket_name"
   s3_bucket_acl           = "private"
   s3_bucket_force_destroy = false
   common_tags             = var.common_tags
