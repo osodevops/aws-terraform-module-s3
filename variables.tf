@@ -91,3 +91,8 @@ variable "archieve_access_days" {
   type    = number
   default = 125
 }
+
+variable "tls_enabled" {
+  type    = bool
+  default = true
+}
