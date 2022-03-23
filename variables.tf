@@ -64,12 +64,6 @@ variable "versioning" {
   default     = {}
 }
 
-variable "versioning" {
-  description = "Map containing versioning configuration."
-  type        = map(string)
-  default     = {}
-}
-
 variable "intelligent_tiering_configuration_enabled" {
   description = "If intelligent tiering should be enabled or not"
   type        = bool

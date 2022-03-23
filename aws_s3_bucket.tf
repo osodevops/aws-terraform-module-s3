@@ -112,11 +112,5 @@ resource "aws_s3_bucket_policy" "bucket-custom-policy" {
   count = var.s3_bucket_policy != "" ? 1 : 0
 
   bucket = one(aws_s3_bucket.bucket[*].bucket)
-  policy = one(data.aws_iam_policy_document.bucket-custom-document[*].json)
-}
-
-data "aws_iam_policy_document" "bucket-custom-document" {
-  count = var.s3_bucket_policy != "" ? 1 : 0
-
-  var.s3_bucket_policy
+  policy = var.s3_bucket_policy
 }
