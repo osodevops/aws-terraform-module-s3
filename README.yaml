@@ -1,0 +1,55 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: ""
+
+# Short description of this project
+description: |-
+  S3 module to create a bucket with encrpytion, TLS, cors rules and intelligent tiering.
+  
+  You can see a working example in the ./example directory.
+
+# Canonical GitHub repo 
+github_repo: osodevops/aws-terraform-module-s3
+
+# How to use this project
+usage: |-
+  ### Requirements
+  Terraform 1.1.7
+
+# Example usage
+examples: |-
+  Follow this example
+  ```hcl
+  module "s3" {
+    source                  = "../"
+    s3_bucket_name          = "exaple_bucket_name"
+    s3_bucket_acl           = "private"
+    s3_bucket_force_destroy = false
+    common_tags             = var.common_tags
+
+    # Bucket public access
+    restrict_public_buckets = true
+    block_public_acls       = true
+    block_public_policy     = true
+    ignore_public_acls      = true
+
+    versioning = {
+      status = "Enabled"
+      mfa_delete = "Disabled"
+    }
+
+    cors_rule = {
+      allowed_headers = ["Authorization"]
+      allowed_methods = ["GET"]
+      allowed_origins = ["*"]
+      expose_headers  = []
+      max_age_seconds = 3000
+    }
+    
+  }
+  ```
