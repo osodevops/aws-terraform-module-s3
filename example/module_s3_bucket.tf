@@ -1,4 +1,4 @@
-module "detected_public_account_bucket" {
+module "bucket" {
   source                  = "../"
   s3_bucket_name          = "exaple_bucket_name"
   s3_bucket_acl           = "private"
