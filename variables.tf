@@ -36,11 +36,6 @@ variable "mfa_delete_enabled" {
   default     = false
 }
 
-variable "enable_lifecycle" {
-  description = "Enable the object lifecycle and store older items in Glacier"
-  default = false
-}
-
 variable "delete_expired_objects" {
   default = false
 }
