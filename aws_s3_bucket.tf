@@ -1,21 +1,19 @@
 resource "aws_s3_bucket" "bucket" {
   bucket        = var.s3_bucket_name
-  policy        = var.s3_bucket_policy
   force_destroy = var.s3_bucket_force_destroy
 
   tags = merge(var.common_tags)
 
 }
 
-
 resource "aws_s3_bucket_acl" "bucket-acl" {
     bucket = aws_s3_bucket.bucket.id   
     acl    = var.s3_bucket_acl
 }
 
-resource "aws_s3_bucket_intelligent_tiering_configuration" "detected-server-logging-configuration" {
+resource "aws_s3_bucket_intelligent_tiering_configuration" "bucket-configuration" {
   count  = var.intelligent_tiering_configuration_enabled ? 1 : 0
-  bucket = one(aws_s3_bucket.detected-server-logging[*].bucket)
+  bucket = one(aws_s3_bucket.bucket[*].bucket)
   name   = var.intelligent_tiering_configuration_name 
 
   tiering {
@@ -31,14 +29,13 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "detected-server-logg
 
 resource "aws_s3_bucket_cors_configuration" "bucket" {
     bucket   = aws_s3_bucket.bucket.id    
-    for_each = var.cors_rule
 
     cors_rule {
-      allowed_headers = lookup(cors_rule.value, "allowed_headers", null)
-      allowed_methods = cors_rule.value.allowed_methods
-      allowed_origins = cors_rule.value.allowed_origins
-      expose_headers  = lookup(cors_rule.value, "expose_headers", null)
-      max_age_seconds = lookup(cors_rule.value, "max_age_seconds", null)
+      allowed_headers = lookup(var.cors_rule, "allowed_headers", null)
+      allowed_methods = lookup(var.cors_rule, "allowed_methods", null)
+      allowed_origins = lookup(var.cors_rule, "allowed_origins", null)
+      expose_headers  = lookup(var.cors_rule, "expose_headers", null)
+      max_age_seconds = lookup(var.cors_rule, "max_age_seconds", null)
     }
 }
 
@@ -52,13 +49,11 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_encrpytion
 }
 
 resource "aws_s3_bucket_versioning" "bucket-versioning" {
-  dynamic "versioning" {
-    for_each = length(keys(var.versioning)) == 0 ? [] : [var.versioning]
+  bucket = one(aws_s3_bucket.bucket[*].bucket)
 
-    versioning_configuration {
-      enabled    = lookup(versioning.value, "enabled", null)
-      mfa_delete = lookup(versioning.value, "mfa_delete", null)
-    }
+  versioning_configuration {
+    status     = lookup(var.versioning, "status", null)
+    mfa_delete = lookup(var.versioning, "mfa_delete", null)
   }
 }
 

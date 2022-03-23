@@ -64,6 +64,12 @@ variable "versioning" {
   default     = {}
 }
 
+
+variable "intelligent_tiering_configuration_name" {
+  description = "The name to give to the tiering configuration"
+  type        = string
+  default     = "bucket_tiering"
+}
 variable "intelligent_tiering_configuration_enabled" {
   description = "If intelligent tiering should be enabled or not"
   type        = bool
