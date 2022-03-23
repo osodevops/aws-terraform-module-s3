@@ -19,6 +19,7 @@ variable "s3_bucket_name" {
 
 variable "s3_bucket_policy" {
   description = "You can provide a custom bucket policy with this variable"
+  default     = ""
 }
 
 variable "bucket_versioning" {
