@@ -30,7 +30,7 @@ resource "aws_s3_bucket_intelligent_tiering_configuration" "detected-server-logg
 
 
 resource "aws_s3_bucket_cors_configuration" "bucket" {
-    bucket = aws_s3_bucket.bucket.id    
+    bucket   = aws_s3_bucket.bucket.id    
     for_each = var.cors_rule
 
     cors_rule {
@@ -71,7 +71,6 @@ resource "aws_s3_bucket_public_access_block" "bucket_access" {
   restrict_public_buckets = var.restrict_public_buckets
 }
 
-
 resource "aws_s3_bucket_policy" "bucket-policy" {
   bucket = aws_s3_bucket.bucket.bucket
   policy = data.aws_iam_policy_document.bucket-tls-policy-document.json
@@ -109,3 +108,15 @@ data "aws_iam_policy_document" "bucket-tls-policy-document" {
   }
 }
 
+resource "aws_s3_bucket_policy" "bucket-custom-policy" {
+  count = var.s3_bucket_policy != "" ? 1 : 0
+
+  bucket = one(aws_s3_bucket.bucket[*].bucket)
+  policy = one(data.aws_iam_policy_document.bucket-custom-document[*].json)
+}
+
+data "aws_iam_policy_document" "bucket-custom-document" {
+  count = var.s3_bucket_policy != "" ? 1 : 0
+
+  var.s3_bucket_policy
+}
