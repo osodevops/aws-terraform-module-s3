@@ -56,8 +56,8 @@ resource "aws_s3_bucket_versioning" "bucket-versioning" {
     for_each = length(keys(var.versioning)) == 0 ? [] : [var.versioning]
 
     versioning_configuration {
-      enabled    = lookup(versioning.value, "Enabled", null)
-      mfa_delete = lookup(versioning.value, "Enabled", null)
+      enabled    = lookup(versioning.value, "enabled", null)
+      mfa_delete = lookup(versioning.value, "mfa_delete", null)
     }
   }
 }

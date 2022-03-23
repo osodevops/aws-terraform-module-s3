@@ -65,12 +65,6 @@ variable "restrict_public_buckets" {
   default = false
 }
 
-variable "lifecycle_rule" {
-  description = "List of maps containing configuration of object lifecycle management."
-  type        = any
-  default     = []
-}
-
 variable "cors_rule" {
   description = "cors rule"
   default     = []
@@ -80,4 +74,20 @@ variable "versioning" {
   description = "Map containing versioning configuration."
   type        = map(string)
   default     = {}
+}
+
+variable "intelligent_tiering_configuration_enabled {
+  description = "If intelligent tiering should be enabled or not."
+  type        = bool
+  default     = false
+}
+
+variable "deep_archive_access_days" {
+  type    = number
+  default = 180
+}
+
+variable "archieve_access_days" {
+  type    = number
+  default = 125
 }
