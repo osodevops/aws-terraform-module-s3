@@ -56,20 +56,19 @@ variable "restrict_public_buckets" {
 variable "cors_rule" {
   description = "cors rule"
   default     = {
-    allowed_headers: ["*"]
-    allowed_methods: ["PUT", "POST"]
-    allowed_origins: [""]
-    expose_headers: ["ETag"]
-    max_age_seconds: 3000
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_origins = [""]
+    expose_headers = ["ETag"]
+    max_age_seconds = 3000
   }
 }
 
 variable "versioning" {
   description = "Map containing versioning configuration."
-  type        = map(string)
   default     = {
-    status: "Disabled",
-    mfa_delete: "Disabled"
+    status = "Disabled",
+    mfa_delete = "Disabled"
   }
 }
 
