@@ -66,7 +66,14 @@ resource "aws_s3_bucket_public_access_block" "bucket_access" {
   restrict_public_buckets = var.restrict_public_buckets
 }
 
+resource "aws_s3_bucket_policy" "bucket-policy-custom" {
+  count  = var.s3_bucket_policy == true ? 1 : 0
+  bucket = aws_s3_bucket.bucket.bucket
+  policy = var.s3_bucket_policy
+}
+
 resource "aws_s3_bucket_policy" "bucket-policy" {
+  count = var.s3_bucket_policy == false ? 1 : 0
   bucket = aws_s3_bucket.bucket.bucket
   policy = one(data.aws_iam_policy_document.bucket-tls-policy-document[*].json)
 }
