@@ -101,3 +101,9 @@ variable "tls_enabled" {
   type         = bool
   default      = true
 }
+
+
+variable "acl_enabled" {
+  description = "Either enable or disable acl on the bucket"
+  default = false
+}
